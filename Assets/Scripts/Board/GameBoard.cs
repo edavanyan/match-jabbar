@@ -28,15 +28,15 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
         _width = GameController.Instance.GameService.Data.BoardData.BoardWidth;
         _height = GameController.Instance.GameService.Data.BoardData.BoardHeight;
 
-        _board = new Tile [_width, _height * 2];
+        _board = new Tile [_width, _height + 2];
 
         var offset = 5;
-        var startX = 720 - offset * 2;
-        var startY = 120;
+        var startX = 400;
+        var startY = 60;
         var tileSize = 120;
         for (var i = 0; i < _width; i++)
         {
-            for (var j = 0; j < _height * 2; j++)
+            for (var j = 0; j < _height + 2; j++)
             {
                 var tile = GameObject.Instantiate<Tile>(tilePrefab, transform, false);
                 tile.Col = i;
@@ -46,7 +46,8 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
                 _board[i, j] = tile;
 
                 var item = _elementPool.NewItem();
-                item.Sprite = GameController.Instance.GameService.Textures.GetSpriteByIndex(UnityEngine.Random.Range(0, 5));
+                item.Sprite =
+                    GameController.Instance.GameService.Textures.GetSpriteByIndex(UnityEngine.Random.Range(0, 5));
                 SetElementOnTile(item, tile);
                 if (j >= _height)
                 {
@@ -56,7 +57,6 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
         }
 
         StartCoroutine(StartGame());
-
     }
 
     private IEnumerator StartGame()
@@ -182,10 +182,10 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
 
     private IEnumerator MoveElements()
     {
-        yield return new WaitForSeconds(seconds: 0.5f);
+        yield return new WaitForSeconds(seconds: 0.33f);
         while (DetermineTileDirections())
         {
-            yield return new WaitForSeconds(seconds: 0.25f);
+            yield return new WaitForSeconds(seconds: 0.15f);
         }
 
         CheckForMatch();
@@ -195,9 +195,9 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
     {
         FindHorizontalMatches();
         FindVerticalMatches();
-        for (var i = 0; i < _matchingTiles.Count; i++)
+        foreach (var tile in _matchingTiles)
         {
-            RemoveElementFromTile(_matchingTiles[i]);
+            tile.Element.AnimateHighlighting(() => RemoveElementFromTile(tile));
         }
 
         if (_matchingTiles.Count > 0)
@@ -210,16 +210,10 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
         return false;
     }
 
-    private void DebugGame()
-    {
-        DetermineTileDirections();
-        CheckForMatch();
-    }
-
     private bool DetermineTileDirections()
     {
         var moveFound = false;
-        for (var j = 1; j < _height * 2; j++)
+        for (var j = 1; j < _height + 2; j++)
         {
             for (var i = 0; i < _width; i++)
             {
@@ -241,7 +235,7 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
             }
         }
 
-        for (var j = 1; j < _height * 2; j++)
+        for (var j = 1; j < _height + 2; j++)
         {
             for (var i = 0; i < _width; i++)
             {
@@ -267,7 +261,7 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
             }
         }
 
-        for (var j = _height; j < _height * 2; j++)
+        for (var j = _height; j < _height + 2; j++)
         {
             for (var i = 0; i < _width; i++)
             {
@@ -313,10 +307,14 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
 
     public void OnPointerMove(PointerEventData eventData)
     {
-        if (Math.Abs(eventData.delta.x) > 2 || Math.Abs(eventData.delta.y) > 2)
+        float minDelta = 7;
+        if (Math.Abs(eventData.delta.x) > minDelta || Math.Abs(eventData.delta.y) > minDelta)
         {
             if (_pressedTile.x >= 0)
             {
+                Debug.Log(eventData.delta);
+                Debug.Log((eventData.position.x - mousePos.x) + " " + (eventData.position.y - mousePos.y));
+                Debug.Log("s ");
                 if (Math.Abs(eventData.delta.x) > Math.Abs(eventData.delta.y))
                 {
                     if (eventData.delta.x > 0)
@@ -419,13 +417,22 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
         }
     }
 
+    private Vector2 mousePos = new Vector2();
+
     public void OnPointerDown(PointerEventData eventData)
     {
         var pressedObject = eventData.pointerCurrentRaycast.gameObject;
+        mousePos = eventData.position;
         if (pressedObject.CompareTag("Element"))
         {
             var tileCol = pressedObject.GetComponent<Element>().Tile.Col;
             var tileRow = pressedObject.GetComponent<Element>().Tile.Row;
+            _pressedTile.Set(tileCol, tileRow);
+        }
+        else if (pressedObject.CompareTag("Tile"))
+        {
+            var tileCol = pressedObject.GetComponent<Tile>().Col;
+            var tileRow = pressedObject.GetComponent<Tile>().Row;
             _pressedTile.Set(tileCol, tileRow);
         }
     }

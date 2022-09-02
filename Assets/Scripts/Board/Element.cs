@@ -1,10 +1,11 @@
 using System;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class Element : MonoBehaviour
+public class Element : MonoBehaviour, IPoolable
 {
     [FormerlySerializedAs("_image")] [SerializeField]
     private Image image;
@@ -28,10 +29,30 @@ public class Element : MonoBehaviour
         this.Tile = tile;
         transform.SetParent(tile.transform);
         IsInMotion = true;
-        ((RectTransform)transform).DoAnchorPos(Vector2.zero, duration: 0.25f).SetEase(Ease.Linear).OnComplete<Tween>(() =>
+        ((RectTransform)transform).DoAnchorPos(Vector2.zero, duration: 0.15f).SetEase(Ease.InOutSine).OnComplete<Tween>(() =>
         {
             IsInMotion = false;
             onComplete?.Invoke();
         });
+    }
+
+    public void AnimateHighlighting(Action action)
+    {
+        transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.15f).OnComplete(() =>
+        {
+            transform.DOScale(new Vector3(1.0f, 1.0f, 1.0f), 0.15f).OnComplete(() => action());
+        });
+    }
+
+    public void New()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void Free()
+    {
+        transform.SetParent(null);
+        gameObject.SetActive(false);
+        transform.localScale.Set(1, 1, 1);
     }
 }

@@ -26,7 +26,7 @@ public class Tile : MonoBehaviour
         if (instant) {
             element.SetToTile(this);
         } else {
-            if (Row < 5 && !element.gameObject.activeSelf) {
+            if (Row < GameController.Instance.GameService.Data.BoardData.BoardHeight && !element.gameObject.activeSelf) {
                 element.gameObject.SetActive(true);
             }
             element.MoveToTile(this, onComplete);

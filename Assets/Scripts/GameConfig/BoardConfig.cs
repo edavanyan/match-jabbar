@@ -1,6 +1,6 @@
 
 public class BoardConfig : IConfig
 {
-    public readonly int BoardWidthInTiles = 5;
-    public readonly int BoardHeightInTiles = 5;
+    public readonly int BoardWidthInTiles = 10;
+    public readonly int BoardHeightInTiles = 8;
 }
