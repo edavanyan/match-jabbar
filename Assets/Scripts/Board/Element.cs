@@ -34,16 +34,4 @@ public class Element : MonoBehaviour
             onComplete?.Invoke();
         });
     }
-
-    public void Move() {
-        var rectPos = _transform.anchoredPosition;
-        if (Tile.CurrentDirection == Tile.Direction.Down) {
-            rectPos.y -= 10;
-        } else if (Tile.CurrentDirection == Tile.Direction.Right) {
-            rectPos.x += 10;
-        } else if (Tile.CurrentDirection == Tile.Direction.Left) {
-            rectPos.x -= 10;
-        }
-        _transform.anchoredPosition = rectPos;
-    }
 }

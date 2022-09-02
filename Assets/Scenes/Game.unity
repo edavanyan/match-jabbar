@@ -368,11 +368,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3cce15d1ccc46b86b24dd7112d6f69a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _width: 0
-  _height: 0
   elementPrefab: {fileID: 2950795070863253234, guid: e68ee83409004a9f9acd3e787f052dc4, type: 3}
   tilePrefab: {fileID: 3275470540473899375, guid: 86721001e79aa48b0b56a80943c5828a, type: 3}
-  _pressedTile: {x: -1, y: -1}
 --- !u!222 &1274637809
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -482,9 +479,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c623b5f2c91833f68bacb9c06f8a7147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Data>k__BackingField: {fileID: 0}
-  <Audio>k__BackingField: {fileID: 0}
-  <Textures>k__BackingField: {fileID: 0}
 --- !u!114 &1514036469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -503,10 +497,6 @@ MonoBehaviour:
   - {fileID: 1575654187, guid: 7341e731b8218c8ecb90715c3fd87366, type: 3}
   - {fileID: -87692585, guid: 7341e731b8218c8ecb90715c3fd87366, type: 3}
   - {fileID: 240818053, guid: 7341e731b8218c8ecb90715c3fd87366, type: 3}
-  - {fileID: 21300000, guid: 87d85120011ed19c4adeac9c1a446a37, type: 3}
-  - {fileID: 21300000, guid: 0e9767ddf36154bfeb36c756c70aeb42, type: 3}
-  - {fileID: 21300000, guid: 274696a4ee77e499aa29daf13ac61cec, type: 3}
-  - {fileID: 21300000, guid: 323fa5438e2c6f4a794438b29e09dc76, type: 3}
 --- !u!1 &1902998834
 GameObject:
   m_ObjectHideFlags: 0

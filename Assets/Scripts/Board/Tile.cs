@@ -35,18 +35,14 @@ public class Tile : MonoBehaviour
 
     public void SetDirectionTo(Tile other) {
         if (other.Col == Col && other.Row == Row) {
-            directionDebug.sprite = GameController.Instance.GameService.Textures.GetSpriteByName(name: "circle_arrow");
             CurrentDirection = Direction.Self;
         } else if (other.Row < Row) {
-            directionDebug.sprite = GameController.Instance.GameService.Textures.GetSpriteByName(name: "down_arrow");
             SetEmpty();
             CurrentDirection = Direction.Down;            
         } else if (other.Col > Col) {
-            directionDebug.sprite = GameController.Instance.GameService.Textures.GetSpriteByName(name: "right_arrow");
             SetEmpty();
             CurrentDirection = Direction.Right;
         } else if (other.Col < Col) {
-            directionDebug.sprite = GameController.Instance.GameService.Textures.GetSpriteByName(name: "left_arrow");
             SetEmpty();
             CurrentDirection = Direction.Left;
         } else {
