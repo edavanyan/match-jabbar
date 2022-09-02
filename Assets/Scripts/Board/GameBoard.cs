@@ -46,8 +46,7 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
                 _board[i, j] = tile;
 
                 var item = _elementPool.NewItem();
-                item.Sprite =
-                    GameController.Instance.GameService.Textures.GetSpriteByIndex(UnityEngine.Random.Range(0, 5));
+                item.Sprite = GameController.Instance.GameService.Textures.GetSpriteByIndex(UnityEngine.Random.Range(0, 5));
                 SetElementOnTile(item, tile);
                 if (j >= _height)
                 {
