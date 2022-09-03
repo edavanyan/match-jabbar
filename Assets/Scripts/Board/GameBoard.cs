@@ -39,8 +39,8 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
 
         _board = new Tile [_width, _height + 2];
 
-        var offset = 5;
-        var startX = 400;
+        var offset = 1;
+        var startX = 100;
         var startY = 60;
         var tileSize = 120;
         for (var i = 0; i < _width; i++)
@@ -321,7 +321,7 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
 
     public void OnPointerMove(PointerEventData eventData)
     {
-        float minDelta = 7;
+        float minDelta = 3;
         if (Math.Abs(eventData.delta.x) > minDelta || Math.Abs(eventData.delta.y) > minDelta)
         {
             if (_pressedTile.x >= 0)
