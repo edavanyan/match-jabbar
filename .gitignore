@@ -9,4 +9,5 @@
 
 /*
 !/Assets
+!/web-build
 *.csproj
