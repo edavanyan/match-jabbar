@@ -43,7 +43,6 @@
   <ItemGroup>
      <Compile Include="Assets/Scripts/GameConfig/IConfig.cs" />
      <Compile Include="Assets/Scripts/GameConfig/BoardConfig.cs" />
-     <Compile Include="Assets/Scripts/System/Services/GameService.cs" />
      <Compile Include="Assets/Scripts/Test/TweenTest.cs" />
      <Compile Include="Assets/Scripts/System/Services/Service.cs" />
      <Compile Include="Assets/Scripts/Data/BoardData.cs" />
