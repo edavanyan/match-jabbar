@@ -27,8 +27,8 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
     {
         _elementPool = new Pool<Element>(elementPrefab);
 
-        _width = GameController.Instance.GameService.Data.BoardData.BoardWidth;
-        _height = GameController.Instance.GameService.Data.BoardData.BoardHeight;
+        _width = GameController.Instance.Data.BoardData.BoardWidth;
+        _height = GameController.Instance.Data.BoardData.BoardHeight;
 
         _board = new Tile [_width, _height + 2];
 
@@ -49,7 +49,7 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
 
                 var item = _elementPool.NewItem();
                 item.Sprite =
-                    GameController.Instance.GameService.Textures.GetSpriteByIndex(UnityEngine.Random.Range(0, 5));
+                    GameController.Instance.Textures.GetSpriteByIndex(UnityEngine.Random.Range(0, 5));
                 SetElementOnTile(item, tile);
                 if (j >= _height)
                 {
@@ -276,7 +276,7 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
                 {
                     var item = _elementPool.NewItem();
                     item.Sprite =
-                        GameController.Instance.GameService.Textures.GetSpriteByIndex(UnityEngine.Random.Range(0, 5));
+                        GameController.Instance.Textures.GetSpriteByIndex(UnityEngine.Random.Range(0, 5));
                     SetElementOnTile(item, _board[i, j]);
                     item.gameObject.SetActive(false);
                 }

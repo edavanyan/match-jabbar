@@ -1,16 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class GameController : MonoBehaviour
+public class GameController : Service<IService>
 {
     public static GameController Instance {get; private set;}
-
-    [FormerlySerializedAs("_gameService")] [SerializeField]
-    private GameService gameService;
-
-    public GameService GameService { get { return gameService; }}
+    
+    public DataService Data {get; private set;}
+    public AudioService Audio {get; private set;}
+    public TextureProvider Textures {get; set;}
 
     [FormerlySerializedAs("_gameBoard")] [SerializeField]
     private GameBoard gameBoard;
@@ -19,16 +19,24 @@ public class GameController : MonoBehaviour
     {
         if (Instance == null) {
             Instance = this;
+            InitializeServices();
 
         } else {
             Destroy(gameObject);
         }        
     }
 
+    private void InitializeServices() {
+        Data = GetComponent<DataService>();
+        Audio = GetComponent<AudioService>();
+        Textures = GetComponent<TextureProvider>();
+    }
+
     void Start() 
     {
         InitializeGame();
-
+        
+        DOTween.Init();
         gameBoard.CreateGameBoard();
     }
 
@@ -36,7 +44,7 @@ public class GameController : MonoBehaviour
         var boardConfig = new BoardConfig();
         var configList = new List<IConfig>();
         configList.Add(boardConfig);
-        GameService.Data.SetFromConfig(configList);
+        Data.SetFromConfig(configList);
     }
 
     private void OnDestroy() {
