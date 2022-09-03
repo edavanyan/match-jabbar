@@ -671,32 +671,29 @@
      <Reference Include="mscorlib">
      <HintPath>/home/edgar/unity/2021.3.8f1/Editor/Data/NetStandard/compat/2.1.0/shims/netfx/mscorlib.dll</HintPath>
      </Reference>
+     <Reference Include="Unity.VisualScripting.Flow.Editor">
+     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.VisualScripting.Flow.Editor.dll</HintPath>
+     </Reference>
      <Reference Include="Unity.VSCode.Editor">
      <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.Services.Core.Analytics">
+     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.Services.Core.Analytics.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.VisualScripting.Shared.Editor">
+     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.VisualScripting.Shared.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.TextMeshPro.Editor">
      <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
      </Reference>
-     <Reference Include="Unity.VisualScripting.State.Editor">
-     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.VisualScripting.State.Editor.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
-     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.UI">
-     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Rider.Editor">
-     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.UI">
-     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.VisualScripting.Flow.Editor">
-     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.VisualScripting.Flow.Editor.dll</HintPath>
+     <Reference Include="Unity.Services.Core.Environments">
+     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.Services.Core.Environments.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualStudio.Editor">
      <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.VisualStudio.Editor.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.Timeline.Editor">
+     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Timeline">
      <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
@@ -707,32 +704,35 @@
      <Reference Include="Unity.TextMeshPro">
      <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
      </Reference>
+     <Reference Include="Unity.VisualScripting.State.Editor">
+     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.VisualScripting.State.Editor.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
+     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
+     </Reference>
      <Reference Include="Unity.VisualScripting.Flow">
      <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.VisualScripting.Flow.dll</HintPath>
+     </Reference>
+     <Reference Include="UnityEditor.UI">
+     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
      </Reference>
      <Reference Include="Unity.PlasticSCM.Editor">
      <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.PlasticSCM.Editor.dll</HintPath>
      </Reference>
+     <Reference Include="Unity.Rider.Editor">
+     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+     </Reference>
+     <Reference Include="UnityEngine.UI">
+     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+     </Reference>
      <Reference Include="Unity.Services.Core">
      <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.Services.Core.dll</HintPath>
      </Reference>
-     <Reference Include="Unity.VisualScripting.Core">
-     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.VisualScripting.Core.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Services.Core.Analytics">
-     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.Services.Core.Analytics.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.VisualScripting.Shared.Editor">
-     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.VisualScripting.Shared.Editor.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Services.Core.Environments">
-     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.Services.Core.Environments.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Timeline.Editor">
-     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
-     </Reference>
      <Reference Include="Unity.VisualScripting.State">
      <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.VisualScripting.State.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.VisualScripting.Core">
+     <HintPath>/home/edgar/projects/Match-Jabbar/Library/ScriptAssemblies/Unity.VisualScripting.Core.dll</HintPath>
      </Reference>
   </ItemGroup>
   <ItemGroup>
