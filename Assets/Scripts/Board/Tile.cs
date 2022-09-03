@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,7 +22,7 @@ public class Tile : MonoBehaviour
         ResetDirection();
     }
 
-    public void SetElement(Element element, bool instant = false, Action onComplete = null) {
+    public void SetElement(Element element, bool instant = false, TweenCallback onComplete = null) {
         this._element = element;
         if (instant) {
             element.SetToTile(this);

@@ -25,15 +25,10 @@ public class Element : MonoBehaviour, IPoolable
         ((RectTransform)transform).anchoredPosition.Set(0, 0);
     }
 
-    public void MoveToTile(Tile tile, Action onComplete) {
-        this.Tile = tile;
+    public void MoveToTile(Tile tile, TweenCallback onComplete) {
+        Tile = tile;
         transform.SetParent(tile.transform);
-        IsInMotion = true;
-        ((RectTransform)transform).DoAnchorPos(Vector2.zero, duration: 0.15f).SetEase(Ease.InOutSine).OnComplete<Tween>(() =>
-        {
-            IsInMotion = false;
-            onComplete?.Invoke();
-        });
+        ((RectTransform)transform).DoAnchorPos(Vector2.zero, duration: 0.15f).SetEase(Ease.InOutSine).OnComplete<Tween>(onComplete);
     }
 
     public void AnimateHighlighting(Action action)

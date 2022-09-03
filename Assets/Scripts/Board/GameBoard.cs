@@ -20,6 +20,8 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
     private readonly List<Tile> _tempListForNeighbours = new List<Tile>();
 
     private Vector2 _pressedTile = new Vector2(-1, -1);
+    
+    private bool _isInMovingState = false;
 
     public void CreateGameBoard()
     {
@@ -182,12 +184,13 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
 
     private IEnumerator MoveElements()
     {
+        _isInMovingState = true;
         yield return new WaitForSeconds(seconds: 0.33f);
         while (DetermineTileDirections())
         {
             yield return new WaitForSeconds(seconds: 0.15f);
         }
-
+        _isInMovingState = false;
         CheckForMatch();
     }
 
@@ -203,7 +206,11 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
         if (_matchingTiles.Count > 0)
         {
             _matchingTiles.Clear();
-            StartCoroutine(MoveElements());
+            if (!_isInMovingState)
+            {
+                StartCoroutine(MoveElements());
+            }
+
             return true;
         }
 
@@ -312,9 +319,6 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
         {
             if (_pressedTile.x >= 0)
             {
-                Debug.Log(eventData.delta);
-                Debug.Log((eventData.position.x - mousePos.x) + " " + (eventData.position.y - mousePos.y));
-                Debug.Log("s ");
                 if (Math.Abs(eventData.delta.x) > Math.Abs(eventData.delta.y))
                 {
                     if (eventData.delta.x > 0)
