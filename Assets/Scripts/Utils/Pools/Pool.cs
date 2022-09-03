@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Pool<T> where T : MonoBehaviour, IPoolable
+public abstract class Pool<T> where T : IPoolable
 {   
     private readonly List<T> _freeItemList = new List<T>();
-    private readonly T _prototypePrefab;
+    private readonly T _prototype;
 
-    public Pool(T prototypePrefab) 
+    public Pool(T prototype)
     {
-        _prototypePrefab = prototypePrefab;
+        _prototype = prototype;
     }
-
+    
     public T NewItem() {
         if (_freeItemList.Count > 0) {
             var item = _freeItemList[0];
@@ -22,8 +22,10 @@ public class Pool<T> where T : MonoBehaviour, IPoolable
             return item;
         }
 
-        return GameObject.Instantiate<T>(_prototypePrefab);
+        return CreateItem(_prototype);
     }
+
+    protected abstract T CreateItem(T prototype);
 
     public void DestoryItem(T item) {
         _freeItemList.Add(item);

@@ -11,6 +11,8 @@ public class GameController : Service<IService>
     public DataService Data {get; private set;}
     public AudioService Audio {get; private set;}
     public TextureProvider Textures {get; set;}
+    
+    public EventService Events { get; set; }
 
     [FormerlySerializedAs("_gameBoard")] [SerializeField]
     private GameBoard gameBoard;
@@ -30,6 +32,7 @@ public class GameController : Service<IService>
         Data = GetComponent<DataService>();
         Audio = GetComponent<AudioService>();
         Textures = GetComponent<TextureProvider>();
+        Events = GetComponent<EventService>();
     }
 
     void Start() 

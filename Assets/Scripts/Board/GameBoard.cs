@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -13,7 +14,9 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
     [SerializeField] private Element elementPrefab;
     [SerializeField] private Tile tilePrefab;
 
-    private Pool<Element> _elementPool;
+    private ComponentPool<Element> _elementPool;
+
+    private CommandPool<SwipeCommand> _commandPool;
 
     private readonly List<Tile> _matchingList = new List<Tile>();
     private readonly List<Tile> _matchingTiles = new List<Tile>();
@@ -23,10 +26,14 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
     
     private bool _isInMovingState = false;
 
+    private CommandExecuter _commandExecuter;
+
     public void CreateGameBoard()
     {
-        _elementPool = new Pool<Element>(elementPrefab);
-
+        _elementPool = new ComponentPool<Element>(elementPrefab);
+        _commandPool = new CommandPool<SwipeCommand>(new SwipeCommand());
+        _commandExecuter = new CommandExecuter();
+        
         _width = GameController.Instance.Data.BoardData.BoardWidth;
         _height = GameController.Instance.Data.BoardData.BoardHeight;
 
@@ -351,19 +358,19 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
     {
         if (tile.Col < _width - 1)
         {
-            var element = tile.Element;
             var tileToSwap = _board[tile.Col + 1, tile.Row];
-            var elementToSwap = tileToSwap.Element;
-            tileToSwap.SetEmpty();
-            tile.SetElement(elementToSwap);
-            tileToSwap.SetElement(element, false, () =>
+            var swipeCommand = _commandPool.NewItem();
+            
+            swipeCommand.Set(tile, tileToSwap, () =>
             {
+                GameController.Instance.Events.FireEvent(typeof(CommandExecutionCompleteEvent));
                 if (checkMatch && !CheckForMatch())
                 {
                     SwapLeft(tileToSwap, false);
                 }
-
             });
+            
+            _commandExecuter.RegisterCommand(swipeCommand);
         }
     }
 
@@ -371,17 +378,19 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
     {
         if (tile.Col > 0)
         {
-            var element = tile.Element;
             var tileToSwap = _board[tile.Col - 1, tile.Row];
-            tile.SetElement(tileToSwap.Element);
-            tileToSwap.SetElement(element, false, () =>
+            var swipeCommand = _commandPool.NewItem();
+            
+            swipeCommand.Set(tile, tileToSwap, () =>
             {
+                GameController.Instance.Events.FireEvent(typeof(CommandExecutionCompleteEvent));
                 if (checkMatch && !CheckForMatch())
                 {
                     SwapRight(tileToSwap, false);
                 }
-
             });
+            
+            _commandExecuter.RegisterCommand(swipeCommand);
         }
     }
 
@@ -389,17 +398,19 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
     {
         if (tile.Row > 0)
         {
-            var element = tile.Element;
             var tileToSwap = _board[tile.Col, tile.Row - 1];
-            tile.SetElement(tileToSwap.Element);
-            tileToSwap.SetElement(element, false, () =>
+            var swipeCommand = _commandPool.NewItem();
+            
+            swipeCommand.Set(tile, tileToSwap, () =>
             {
+                GameController.Instance.Events.FireEvent(typeof(CommandExecutionCompleteEvent));
                 if (checkMatch && !CheckForMatch())
                 {
                     SwapUp(tileToSwap, false);
                 }
-
             });
+            
+            _commandExecuter.RegisterCommand(swipeCommand);
         }
     }
 
@@ -407,26 +418,26 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
     {
         if (tile.Row < _height - 1)
         {
-            var element = tile.Element;
             var tileToSwap = _board[tile.Col, tile.Row + 1];
-            tile.SetElement(tileToSwap.Element);
-            tileToSwap.SetElement(element, false, () =>
+            var swipeCommand = _commandPool.NewItem();
+            
+            swipeCommand.Set(tile, tileToSwap, () =>
             {
+                GameController.Instance.Events.FireEvent(typeof(CommandExecutionCompleteEvent));
                 if (checkMatch && !CheckForMatch())
                 {
                     SwapDown(tileToSwap, false);
                 }
 
             });
+            
+            _commandExecuter.RegisterCommand(swipeCommand);
         }
     }
-
-    private Vector2 mousePos = new Vector2();
 
     public void OnPointerDown(PointerEventData eventData)
     {
         var pressedObject = eventData.pointerCurrentRaycast.gameObject;
-        mousePos = eventData.position;
         if (pressedObject.CompareTag("Element"))
         {
             var tileCol = pressedObject.GetComponent<Element>().Tile.Col;
