@@ -28,6 +28,8 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
 
     private CommandExecuter _commandExecuter;
 
+    private List<Element> _movingElemets = new List<Element>();
+
     public void CreateGameBoard()
     {
         _elementPool = new ComponentPool<Element>(elementPrefab);
@@ -195,8 +197,17 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
         yield return new WaitForSeconds(seconds: 0.33f);
         while (DetermineTileDirections())
         {
-            yield return new WaitForSeconds(seconds: 0.15f);
+            yield return new WaitForSeconds(seconds: 0.2f);
         }
+
+        foreach (var movingElemet in _movingElemets)
+        {
+            movingElemet.transform.localScale.Set(1, 1, 1);
+            movingElemet.AnimateDrop();
+        }
+        _movingElemets.Clear();
+        yield return new WaitForSeconds(0.1f);
+        
         _isInMovingState = false;
         CheckForMatch();
     }
@@ -240,7 +251,10 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
                             moveFound = true;
                         }
 
-                        _board[i, j - 1].SetElement(_board[i, j].Element);
+                        var element = _board[i, j].Element;
+                        _board[i, j - 1].SetElement(element);
+                        element.AnimateScaleY();
+                        _movingElemets.Add(element);
                     }
 
                     _board[i, j].SetDirectionTo(_board[i, j - 1]);
@@ -265,7 +279,10 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
                                 moveFound = true;
                             }
 
-                            tile.SetElement(_board[i, j].Element);
+                            var element = _board[i, j].Element;
+                            tile.SetElement(element);
+                            element.AnimateScaleX();
+                            _movingElemets.Add(element);
                         }
 
                         _board[i, j].SetEmpty();

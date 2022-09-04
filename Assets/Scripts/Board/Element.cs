@@ -11,24 +11,24 @@ public class Element : MonoBehaviour, IPoolable
     private Image image;
     public Sprite Sprite{set{image.sprite = value;} get{return image.sprite;}}
     [HideInInspector]public Tile Tile { get; private set; }
-    private RectTransform _transform;
+    private RectTransform _rectTransform;
 
     public bool IsInMotion {get; private set;}
 
     private void Awake() {
-        _transform = transform as RectTransform;
+        _rectTransform = transform as RectTransform;
     }
 
     public void SetToTile(Tile tile) {
         this.Tile = tile;
         transform.SetParent(tile.transform, false);
-        ((RectTransform)transform).anchoredPosition.Set(0, 0);
+        _rectTransform.anchoredPosition.Set(0, 0);
     }
 
     public void MoveToTile(Tile tile, TweenCallback onComplete) {
         Tile = tile;
         transform.SetParent(tile.transform);
-        ((RectTransform)transform).DoAnchorPos(Vector2.zero, duration: 0.15f).SetEase(Ease.InOutSine).OnComplete<Tween>(onComplete);
+        _rectTransform.DoAnchorPos(Vector2.zero, duration: 0.2f).SetEase(Ease.InOutSine).OnComplete<Tween>(onComplete);
     }
 
     public void AnimateHighlighting(Action action)
@@ -49,5 +49,42 @@ public class Element : MonoBehaviour, IPoolable
         transform.SetParent(null);
         gameObject.SetActive(false);
         transform.localScale.Set(1, 1, 1);
+    }
+
+    public void AnimateDrop()
+    {
+        _rectTransform.DoAnchorPosY(-1, 0.05f).OnComplete<Tween>(() =>
+        {
+            _rectTransform.DoAnchorPosY(0, 0.05f).SetEase(Ease.OutBack);
+        });
+        if (_rectTransform.localScale.x > 1.0f)
+        {
+            _rectTransform.DOScaleX(1f, 0.1f);
+        }
+
+        if (_rectTransform.localScale.y > 1.0f)
+        {
+            _rectTransform.DOScaleY(1f, 0.1f);
+        }
+    }
+
+    public void AnimateScaleX()
+    {
+        if (_rectTransform.localScale.x > 1.0f)
+        {
+            _rectTransform.DOScaleY(1.0f, 0.1f).SetEase(Ease.OutSine);
+        }
+
+        _rectTransform.DOScaleX(1.1f, 0.1f).SetEase(Ease.OutSine);
+    }
+
+    public void AnimateScaleY()
+    {
+        if (_rectTransform.localScale.y > 1.0f)
+        {
+            _rectTransform.DOScaleX(1.0f, 0.1f).SetEase(Ease.OutSine);
+        }
+
+        _rectTransform.DOScaleY(1.1f, 0.1f).SetEase(Ease.OutSine);
     }
 }
