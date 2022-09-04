@@ -7,7 +7,4 @@
 /.idea/
 /.vscode/
 
-/*
-!/Assets
-!/web-build
 *.csproj
