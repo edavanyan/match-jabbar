@@ -10,4 +10,5 @@
 /*
 !/Assets
 !/web-build
+*.meta
 *.csproj

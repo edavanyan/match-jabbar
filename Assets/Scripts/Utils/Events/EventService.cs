@@ -9,8 +9,8 @@ using UnityEngine;
 public class EventService : Service<Event>
 {
 
-    private List<EventListener> _eventListeners = new List<EventListener>();
-    private object[] _parameters = new object[1];
+    private readonly List<EventListener> _eventListeners = new List<EventListener>();
+    private readonly object[] _parameters = new object[1];
 
     public void Awake()
     {

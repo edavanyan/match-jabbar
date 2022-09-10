@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class CommandExecuter : EventListener
 {
-        private Queue<ICommand> _commandList = new Queue<ICommand>();
-        private bool _busy = false;
+        private readonly Queue<ICommand> _commandList = new Queue<ICommand>();
+        public bool Busy { get; private set; }
 
         public CommandExecuter()
         {
@@ -16,7 +16,7 @@ public class CommandExecuter : EventListener
         public void RegisterCommand(ICommand command)
         {
                 _commandList.Enqueue(command);
-                if (!_busy)
+                if (!Busy)
                 {
                         ExecuteCommands();
                 }
@@ -26,7 +26,7 @@ public class CommandExecuter : EventListener
         {
                 if (_commandList.TryDequeue(out var command))
                 {
-                        _busy = true;
+                        Busy = true;   
                         command.execute();
                 }
         }
@@ -34,7 +34,7 @@ public class CommandExecuter : EventListener
         [EventHandler]
         private void OnCommandExecutionCompleteEvent(CommandExecutionCompleteEvent completeEvent)
         {
-                _busy = false;
+                Busy = false;
                 ExecuteCommands();
         }
 }

@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 3275470540473899372}
   - component: {fileID: 3275470540473899373}
   - component: {fileID: 3275470540473899375}
-  m_Layer: 5
+  - component: {fileID: 6498913778820268907}
+  m_Layer: 6
   m_Name: Tile
   m_TagString: Tile
   m_Icon: {fileID: 0}
@@ -37,7 +38,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -240, y: -442}
-  m_SizeDelta: {x: 120, y: 120}
+  m_SizeDelta: {x: 110, y: 110}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3275470540473899372
 CanvasRenderer:
@@ -60,7 +61,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.69411767}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.41960785}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -90,3 +91,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   directionDebug: {fileID: 3275470540473899373}
+--- !u!210 &6498913778820268907
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3275470540473899411}
+  m_Enabled: 1
+  m_SortingLayerID: 33177137
+  m_SortingLayer: 2
+  m_SortingOrder: 0

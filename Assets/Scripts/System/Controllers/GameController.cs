@@ -17,6 +17,9 @@ public class GameController : Service<IService>
     [FormerlySerializedAs("_gameBoard")] [SerializeField]
     private GameBoard gameBoard;
 
+    [SerializeField]private Canvas _canvas;
+    public Canvas Canvas => _canvas;
+
     void Awake()
     {
         if (Instance == null) {

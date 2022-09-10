@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 6062576521554601721}
   - component: {fileID: 4139673165061736296}
   - component: {fileID: 2950795070863253234}
-  m_Layer: 0
+  - component: {fileID: -3427093400546584050}
+  m_Layer: 7
   m_Name: Element
   m_TagString: Element
   m_Icon: {fileID: 0}
@@ -38,7 +39,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 85, y: 85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &3902587987621672318
 Animator:
@@ -48,7 +49,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2079895483127866879}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: d4a563f457465f80cb94b980352f68a8, type: 2}
   m_CullingMode: 0
@@ -88,9 +89,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -256944978, guid: 7341e731b8218c8ecb90715c3fd87366, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2f7ca09c9262d370a9d370161f74a9ae, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -111,3 +112,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 4139673165061736296}
+  hintAnimator: {fileID: 3902587987621672318}
+--- !u!210 &-3427093400546584050
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079895483127866879}
+  m_Enabled: 1
+  m_SortingLayerID: -671785665
+  m_SortingLayer: 1
+  m_SortingOrder: 0

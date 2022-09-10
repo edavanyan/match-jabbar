@@ -10,8 +10,10 @@ public class Element : MonoBehaviour, IPoolable
     [FormerlySerializedAs("_image")] [SerializeField]
     private Image image;
     public Sprite Sprite{set{image.sprite = value;} get{return image.sprite;}}
-    [HideInInspector]public Tile Tile { get; private set; }
+    public Tile Tile { get; private set; }
     private RectTransform _rectTransform;
+
+    [SerializeField] private Animator hintAnimator;
 
     public bool IsInMotion {get; private set;}
 
@@ -28,24 +30,46 @@ public class Element : MonoBehaviour, IPoolable
     public void MoveToTile(Tile tile, TweenCallback onComplete) {
         Tile = tile;
         transform.SetParent(tile.transform);
-        _rectTransform.DoAnchorPos(Vector2.zero, duration: 0.2f).SetEase(Ease.InOutSine).OnComplete<Tween>(onComplete);
+        IsInMotion = true;
+        _rectTransform.DoAnchorPos(Vector2.zero, duration: 0.15f).SetEase(Ease.InOutSine).OnComplete<Tween>(() =>
+        {
+            IsInMotion = false;
+            onComplete?.Invoke();
+        });
     }
 
     public void AnimateHighlighting(Action action)
     {
+        IsInMotion = true;
         transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.15f).OnComplete(() =>
         {
-            transform.DOScale(new Vector3(1.0f, 1.0f, 1.0f), 0.15f).OnComplete(() => action());
+            transform.DOScale(new Vector3(1.0f, 1.0f, 1.0f), 0.15f).OnComplete(() =>
+            {
+                IsInMotion = false;
+                action();
+            });
         });
     }
 
     public void New()
     {
+        hintAnimator.enabled = false;
         gameObject.SetActive(true);
+    }
+
+    public void AnimateHint()
+    {
+        hintAnimator.enabled = true;
+    }
+
+    public void StopHintAnimation()
+    {
+        hintAnimator.enabled = false;
     }
 
     public void Free()
     {
+        IsInMotion = false;
         transform.SetParent(null);
         gameObject.SetActive(false);
         transform.localScale.Set(1, 1, 1);

@@ -398,7 +398,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 5486039c77fbbb6dc86edac525e57c4e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -481,11 +481,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteList:
-  - {fileID: 1873788012, guid: 7341e731b8218c8ecb90715c3fd87366, type: 3}
-  - {fileID: 569466398, guid: 7341e731b8218c8ecb90715c3fd87366, type: 3}
-  - {fileID: 1575654187, guid: 7341e731b8218c8ecb90715c3fd87366, type: 3}
-  - {fileID: -87692585, guid: 7341e731b8218c8ecb90715c3fd87366, type: 3}
-  - {fileID: 240818053, guid: 7341e731b8218c8ecb90715c3fd87366, type: 3}
+  - {fileID: 21300000, guid: e9965931ccc3ad94eb6e1ca03802b47d, type: 3}
+  - {fileID: 21300000, guid: d6a7a2f68171e87f18de972f57488bc7, type: 3}
+  - {fileID: 21300000, guid: d906d704d598cc7c08164eaf5c9c7c24, type: 3}
+  - {fileID: 21300000, guid: 8803519e69ac03a41b84303953236ffe, type: 3}
+  - {fileID: 21300000, guid: 33ec72fab35cf836bb9464aec19af74b, type: 3}
 --- !u!114 &1514036470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,6 +499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameBoard: {fileID: 1274637807}
+  _canvas: {fileID: 12384986}
 --- !u!114 &1514036471
 MonoBehaviour:
   m_ObjectHideFlags: 0

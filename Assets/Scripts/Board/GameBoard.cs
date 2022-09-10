@@ -18,8 +18,6 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
 
     private CommandPool<SwipeCommand> _commandPool;
 
-    private readonly List<Tile> _matchingList = new List<Tile>();
-    private readonly List<Tile> _matchingTiles = new List<Tile>();
     private readonly List<Tile> _tempListForNeighbours = new List<Tile>();
 
     private Vector2 _pressedTile = new Vector2(-1, -1);
@@ -28,7 +26,8 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
 
     private CommandExecuter _commandExecuter;
 
-    private List<Element> _movingElemets = new List<Element>();
+    private readonly List<Element> _movingElemets = new List<Element>();
+    private BoardHelper _boardHelper;
 
     public void CreateGameBoard()
     {
@@ -41,10 +40,16 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
 
         _board = new Tile [_width, _height + 2];
 
-        var offset = 1;
-        var startX = 100;
-        var startY = 60;
-        var tileSize = 120;
+        var offset = 0;
+
+        var canvasTransform = GameController.Instance.Canvas.transform as RectTransform;
+        var canvasWidth = canvasTransform.rect.size.x;
+        var canvasHeight = canvasTransform.rect.size.y;
+
+        var tileTransform = tilePrefab.transform as RectTransform;
+        var tileSize = tileTransform.rect;
+        var startX = canvasWidth / 2 - _width * tileSize.width / 2f + tileSize.width / 2f;
+        var startY = canvasHeight / 2 - _height * tileSize.height / 2f + tileSize.height / 2f;
         for (var i = 0; i < _width; i++)
         {
             for (var j = 0; j < _height + 2; j++)
@@ -52,7 +57,7 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
                 var tile = GameObject.Instantiate<Tile>(tilePrefab, transform, false);
                 tile.Col = i;
                 tile.Row = j;
-                var pos = new Vector3(x: startX + ((tileSize + offset) * i), startY + (tileSize + offset) * j, 0);
+                var pos = new Vector3(x: startX + ((tileSize.width + offset) * i), startY + (tileSize.height + offset) * j, 0);
                 tile.transform.position = pos;
                 _board[i, j] = tile;
 
@@ -67,12 +72,13 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
             }
         }
 
+        _boardHelper = new BoardHelper(_board, _width, _height);
         StartCoroutine(StartGame());
     }
 
     private IEnumerator StartGame()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.2f);
         StartCoroutine(MoveElements());
     }
 
@@ -91,6 +97,56 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
         _board[col, row].SetElement(element, true);
     }
 
+    private IEnumerator MoveElements()
+    {
+        _isInMovingState = true;
+        yield return new WaitForSeconds(seconds: 0.33f);
+        while (DetermineTileDirections())
+        {
+            yield return new WaitForSeconds(seconds: 0.15f);
+        }
+
+        foreach (var movingElemet in _movingElemets)
+        {
+            movingElemet.transform.localScale.Set(1, 1, 1);
+            movingElemet.AnimateDrop();
+        }
+        _movingElemets.Clear();
+        _isInMovingState = false;
+        
+        if (!CheckForMatch())
+        {
+            var shuffleBoard = _boardHelper.ShuffleBoard(_board);
+            if (shuffleBoard)
+            {
+                yield return new WaitForSeconds(0.15f);
+                CheckForMatch();
+            }
+        }
+    }
+
+    private bool CheckForMatch()
+    {
+        var matchingTiles = _boardHelper.CheckForMatch(_board);
+        foreach (var tile in matchingTiles)
+        {
+            tile.Element.AnimateHighlighting(() => RemoveElementFromTile(tile));
+        }
+
+        if (matchingTiles.Count > 0)
+        {
+            matchingTiles.Clear();
+            if (!_isInMovingState)
+            {
+                StartCoroutine(MoveElements());
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     private void RemoveElementFromTile(Tile tile)
     {
         if (tile.Empty)
@@ -103,138 +159,7 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
         tile.SetDirectionTo(tile);
         tile.SetEmpty();
     }
-
-    private void FindHorizontalMatches()
-    {
-        for (var i = 0; i < _height; i++)
-        {
-            for (var j = 0; j < _width; j++)
-            {
-                _board[j, i].ResetDirection();
-                if (_board[j, i].Empty)
-                {
-                    continue;
-                }
-
-                if (_matchingList.Count == 0)
-                {
-                    _matchingList.Add(_board[j, i]);
-                }
-                else if (_board[j, i].Element.Sprite.name == _matchingList[0].Element.Sprite.name)
-                {
-                    _matchingList.Add(_board[j, i]);
-                }
-                else
-                {
-                    CheckIfMatchDetected(j, i);
-                }
-            }
-
-            CheckIfMatchDetected();
-        }
-
-        _matchingList.Clear();
-    }
-
-    private void FindVerticalMatches()
-    {
-        for (var i = 0; i < _width; i++)
-        {
-            for (var j = 0; j < _height; j++)
-            {
-                if (_board[i, j].Empty)
-                {
-                    continue;
-                }
-
-                if (_matchingList.Count == 0)
-                {
-                    _matchingList.Add(_board[i, j]);
-                }
-                else if (_board[i, j].Element.Sprite.name == _matchingList[0].Element.Sprite.name)
-                {
-                    _matchingList.Add(_board[i, j]);
-                }
-                else
-                {
-                    CheckIfMatchDetected(i, j);
-                }
-            }
-
-            CheckIfMatchDetected();
-        }
-
-        _matchingList.Clear();
-    }
-
-    private void CheckIfMatchDetected(int x = -1, int y = -1)
-    {
-        if (_matchingList.Count > 2)
-        {
-            MatchDetected(_matchingList);
-        }
-
-        _matchingList.Clear();
-        if (x == -1 || y == -1)
-        {
-            return;
-        }
-
-        _matchingList.Add(_board[x, y]);
-    }
-
-    private void MatchDetected(List<Tile> match)
-    {
-        foreach (var tile in match)
-        {
-            _matchingTiles.Add(tile);
-        }
-    }
-
-    private IEnumerator MoveElements()
-    {
-        _isInMovingState = true;
-        yield return new WaitForSeconds(seconds: 0.33f);
-        while (DetermineTileDirections())
-        {
-            yield return new WaitForSeconds(seconds: 0.2f);
-        }
-
-        foreach (var movingElemet in _movingElemets)
-        {
-            movingElemet.transform.localScale.Set(1, 1, 1);
-            movingElemet.AnimateDrop();
-        }
-        _movingElemets.Clear();
-        yield return new WaitForSeconds(0.1f);
-        
-        _isInMovingState = false;
-        CheckForMatch();
-    }
-
-    private bool CheckForMatch()
-    {
-        FindHorizontalMatches();
-        FindVerticalMatches();
-        foreach (var tile in _matchingTiles)
-        {
-            tile.Element.AnimateHighlighting(() => RemoveElementFromTile(tile));
-        }
-
-        if (_matchingTiles.Count > 0)
-        {
-            _matchingTiles.Clear();
-            if (!_isInMovingState)
-            {
-                StartCoroutine(MoveElements());
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
+    
     private bool DetermineTileDirections()
     {
         var moveFound = false;
@@ -377,13 +302,28 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
         {
             var tileToSwap = _board[tile.Col + 1, tile.Row];
             var swipeCommand = _commandPool.NewItem();
+            if (tile.Empty || 
+                tileToSwap.Empty ||
+                tile.Element.IsInMotion || 
+                tileToSwap.Element.IsInMotion)
+            {
+                return;
+            }
             
             swipeCommand.Set(tile, tileToSwap, () =>
             {
                 GameController.Instance.Events.FireEvent(typeof(CommandExecutionCompleteEvent));
-                if (checkMatch && !CheckForMatch())
+                if (checkMatch)
                 {
-                    SwapLeft(tileToSwap, false);
+                    if (!(_boardHelper.CheckMatchesOnTile(tile, _board) ||
+                        _boardHelper.CheckMatchesOnTile(tileToSwap, _board)))
+                    {
+                        SwapLeft(tileToSwap, false);
+                    }
+                    else if (!_isInMovingState)
+                    {
+                        CheckForMatch();
+                    }
                 }
             });
             
@@ -397,13 +337,28 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
         {
             var tileToSwap = _board[tile.Col - 1, tile.Row];
             var swipeCommand = _commandPool.NewItem();
+            if (tile.Empty || 
+                tileToSwap.Empty ||
+                tile.Element.IsInMotion || 
+                tileToSwap.Element.IsInMotion)
+            {
+                return;
+            }
             
             swipeCommand.Set(tile, tileToSwap, () =>
             {
                 GameController.Instance.Events.FireEvent(typeof(CommandExecutionCompleteEvent));
-                if (checkMatch && !CheckForMatch())
+                if (checkMatch)
                 {
-                    SwapRight(tileToSwap, false);
+                    if (!(_boardHelper.CheckMatchesOnTile(tile, _board) ||
+                        _boardHelper.CheckMatchesOnTile(tileToSwap, _board)))
+                    {
+                        SwapRight(tileToSwap, false);
+                    }
+                    else if (!_isInMovingState)
+                    {
+                        CheckForMatch();
+                    }
                 }
             });
             
@@ -417,13 +372,28 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
         {
             var tileToSwap = _board[tile.Col, tile.Row - 1];
             var swipeCommand = _commandPool.NewItem();
+            if (tile.Empty || 
+                tileToSwap.Empty ||
+                tile.Element.IsInMotion || 
+                tileToSwap.Element.IsInMotion)
+            {
+                return;
+            }
             
             swipeCommand.Set(tile, tileToSwap, () =>
             {
                 GameController.Instance.Events.FireEvent(typeof(CommandExecutionCompleteEvent));
-                if (checkMatch && !CheckForMatch())
+                if (checkMatch)
                 {
-                    SwapUp(tileToSwap, false);
+                    if (!(_boardHelper.CheckMatchesOnTile(tile, _board) ||
+                        _boardHelper.CheckMatchesOnTile(tileToSwap, _board)))
+                    {
+                        SwapUp(tileToSwap, false);
+                    }
+                    else if (!_isInMovingState)
+                    {
+                        CheckForMatch();
+                    }
                 }
             });
             
@@ -437,13 +407,29 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
         {
             var tileToSwap = _board[tile.Col, tile.Row + 1];
             var swipeCommand = _commandPool.NewItem();
+            if (tile.Empty || 
+                tileToSwap.Empty ||
+                tile.Element.IsInMotion || 
+                tileToSwap.Element.IsInMotion)
+            {
+                return;
+            }
             
             swipeCommand.Set(tile, tileToSwap, () =>
             {
                 GameController.Instance.Events.FireEvent(typeof(CommandExecutionCompleteEvent));
-                if (checkMatch && !CheckForMatch())
+                if (checkMatch)
                 {
-                    SwapDown(tileToSwap, false);
+
+                    if (!(_boardHelper.CheckMatchesOnTile(tile, _board) ||
+                        _boardHelper.CheckMatchesOnTile(tileToSwap, _board)))
+                    {
+                        SwapDown(tileToSwap, false);
+                    }
+                    else if (!_isInMovingState)
+                    {
+                        CheckForMatch();
+                    }
                 }
 
             });
