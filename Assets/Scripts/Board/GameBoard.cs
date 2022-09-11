@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -41,29 +40,20 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
         _board = new Tile [_width, _height + 2];
 
         var offset = 0;
+        elementPrefab.transform.localScale = Vector3.one;
 
-        var canvasTransform = GameController.Instance.Canvas.transform as RectTransform;
-        var canvasWidth = canvasTransform.rect.size.x;
-        var canvasHeight = canvasTransform.rect.size.y;
-
-        var tileTransform = tilePrefab.transform as RectTransform;
-        var tileSize = tileTransform.rect;
-        var startX = canvasWidth / 2 - _width * tileSize.width / 2f + tileSize.width / 2f;
-        var startY = canvasHeight / 2 - _height * tileSize.height / 2f + tileSize.height / 2f;
         for (var i = 0; i < _width; i++)
         {
             for (var j = 0; j < _height + 2; j++)
             {
-                var tile = GameObject.Instantiate<Tile>(tilePrefab, transform, false);
+                var tile = Instantiate(tilePrefab, transform, false);
                 tile.Col = i;
                 tile.Row = j;
-                var pos = new Vector3(x: startX + ((tileSize.width + offset) * i), startY + (tileSize.height + offset) * j, 0);
-                tile.transform.position = pos;
+                
                 _board[i, j] = tile;
 
                 var item = _elementPool.NewItem();
-                item.Sprite =
-                    GameController.Instance.Textures.GetSpriteByIndex(UnityEngine.Random.Range(0, 5));
+                item.Sprite = GameController.Instance.Textures.GetSpriteByIndex(UnityEngine.Random.Range(0, 5));
                 SetElementOnTile(item, tile);
                 if (j >= _height)
                 {
@@ -78,6 +68,27 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
 
     private IEnumerator StartGame()
     {
+        yield return new WaitForSeconds(0.3f);
+        
+        var canvasTransform = GameController.Instance.Canvas.transform as RectTransform;
+
+        var tileTransform = tilePrefab.transform as RectTransform;
+        tileTransform.localScale = Vector3.one;
+        var tileSize = tileTransform.rect;
+        var startX = -_width * tileSize.width / 2f + tileSize.width / 2f;
+        var startY = -_height * tileSize.height / 2f + tileSize.height / 2f;
+        
+        for (var i = 0; i < _width; i++)
+        {
+            for (var j = 0; j < _height + 2; j++)
+            {
+                var tile = _board[i, j];
+                var pos = new Vector3(x: startX + ((tileSize.width ) * i), startY + (tileSize.height) * j, -20);
+                ((RectTransform)tile.transform).anchoredPosition = pos;
+                transform.localScale = Vector3.one;
+            }
+        }
+        
         yield return new WaitForSeconds(0.2f);
         StartCoroutine(MoveElements());
     }

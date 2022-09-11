@@ -62,9 +62,10 @@
      <Compile Include="Assets/Scripts/System/Controllers/GameController.cs" />
      <Compile Include="Assets/Scripts/Board/Tile.cs" />
      <Compile Include="Assets/Scripts/Utils/Events/EventService.cs" />
+     <Compile Include="Assets/Scripts/AI/BoardHelper.cs" />
      <Compile Include="Assets/Scripts/Utils/Pools/CommandPool.cs" />
      <Compile Include="Assets/Scripts/Board/Element.cs" />
-     <Compile Include="Assets/Scripts/AI/BoardHelper.cs" />
+     <Compile Include="Assets/Scripts/Utils/EnumExtentions.cs" />
      <None Include="Assets/Resources/BillingMode.json" />
      <Reference Include="UnityEngine">
      <HintPath>/home/edgar/Unity/Hub/Editor/2021.3.9f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>

@@ -1,21 +1,45 @@
 using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using ColorUtility = UnityEngine.ColorUtility;
 
 public class Element : MonoBehaviour, IPoolable
 {
     [FormerlySerializedAs("_image")] [SerializeField]
     private Image image;
-    public Sprite Sprite{set{image.sprite = value;} get{return image.sprite;}}
+
+    private Dictionary<string, Color> colors = new Dictionary<string, Color>()
+    {
+        { "red", Color.red },
+        { "yellow", Color.yellow },
+        { "green", Color.green },
+        { "blue", new Color(38f / 256, 172f / 256, 255f / 256) },
+        { "orange", new Color(252f / 256, 186f / 256, 3f / 256) }
+    };
+
+    public Sprite Sprite
+    {
+        set
+        {
+            image.sprite = value;
+            var particleMain = particle.main;
+            particleMain.startColor = new ParticleSystem.MinMaxGradient(colors[value.name]);
+        } 
+        get{return image.sprite;}
+    }
+    
     public Tile Tile { get; private set; }
     private RectTransform _rectTransform;
 
     [SerializeField] private Animator hintAnimator;
 
     public bool IsInMotion {get; private set;}
+
+    [SerializeField]private ParticleSystem particle;
 
     private void Awake() {
         _rectTransform = transform as RectTransform;
@@ -40,10 +64,11 @@ public class Element : MonoBehaviour, IPoolable
 
     public void AnimateHighlighting(Action action)
     {
+        particle.Play();
         IsInMotion = true;
         transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.15f).OnComplete(() =>
         {
-            transform.DOScale(new Vector3(1.0f, 1.0f, 1.0f), 0.15f).OnComplete(() =>
+            transform.DOScale(new Vector3(0f, 0f, 1.0f), 0.15f).OnComplete(() =>
             {
                 IsInMotion = false;
                 action();
@@ -55,6 +80,7 @@ public class Element : MonoBehaviour, IPoolable
     {
         hintAnimator.enabled = false;
         gameObject.SetActive(true);
+        transform.localScale.Set(1, 1, 1);
     }
 
     public void AnimateHint()
@@ -72,7 +98,6 @@ public class Element : MonoBehaviour, IPoolable
         IsInMotion = false;
         transform.SetParent(null);
         gameObject.SetActive(false);
-        transform.localScale.Set(1, 1, 1);
     }
 
     public void AnimateDrop()
@@ -83,12 +108,12 @@ public class Element : MonoBehaviour, IPoolable
         });
         if (_rectTransform.localScale.x > 1.0f)
         {
-            _rectTransform.DOScaleX(1f, 0.1f);
+            _rectTransform.DOScale(1, 0.1f);
         }
 
         if (_rectTransform.localScale.y > 1.0f)
         {
-            _rectTransform.DOScaleY(1f, 0.1f);
+            _rectTransform.DOScale(1f, 0.1f);
         }
     }
 
@@ -96,7 +121,7 @@ public class Element : MonoBehaviour, IPoolable
     {
         if (_rectTransform.localScale.x > 1.0f)
         {
-            _rectTransform.DOScaleY(1.0f, 0.1f).SetEase(Ease.OutSine);
+            _rectTransform.DOScale(1.0f, 0.1f).SetEase(Ease.OutSine);
         }
 
         _rectTransform.DOScaleX(1.1f, 0.1f).SetEase(Ease.OutSine);
@@ -106,7 +131,7 @@ public class Element : MonoBehaviour, IPoolable
     {
         if (_rectTransform.localScale.y > 1.0f)
         {
-            _rectTransform.DOScaleX(1.0f, 0.1f).SetEase(Ease.OutSine);
+            _rectTransform.DOScale(1.0f, 0.1f).SetEase(Ease.OutSine);
         }
 
         _rectTransform.DOScaleY(1.1f, 0.1f).SetEase(Ease.OutSine);
