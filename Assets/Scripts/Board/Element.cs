@@ -28,6 +28,9 @@ public class Element : MonoBehaviour, IPoolable
             image.sprite = value;
             var particleMain = particle.main;
             particleMain.startColor = new ParticleSystem.MinMaxGradient(colors[value.name]);
+            
+            var scale = Math.Clamp(1f - (Screen.height - 600) * 0.7f / (2556 - 600), 0.3f, 1f);
+            particle.transform.localScale = new Vector3(scale, scale, 1);
         } 
         get{return image.sprite;}
     }

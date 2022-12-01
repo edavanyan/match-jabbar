@@ -274,7 +274,7 @@ public class GameBoard : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
 
     public void OnPointerMove(PointerEventData eventData)
     {
-        float minDelta = 3;
+        float minDelta = 1;
         if (Math.Abs(eventData.delta.x) > minDelta || Math.Abs(eventData.delta.y) > minDelta)
         {
             if (_pressedTile.x >= 0)
